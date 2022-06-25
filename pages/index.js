@@ -33,7 +33,7 @@ export default function Home({ storeList }) {
                   name={store.name}
                   className={styles.card}
                   imgUrl={store.imgUrl}
-                  href={store.websiteUrl}
+                  href={`/coffee-store/${store.id}`}
                 />
               ))}
             </div>
