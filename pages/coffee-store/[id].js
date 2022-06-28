@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import classNames from 'classnames';
 
-import coffeeStores from '../../data/coffee-stores.json';
+import { fetchCoffeeStores } from '../../lib/coffee-stores';
 import styles from '../../styles/coffee-store.module.css';
 
 const CoffeeStore = ({ coffeeStore }) => {
@@ -13,7 +13,7 @@ const CoffeeStore = ({ coffeeStore }) => {
     return <div>Loading..</div>;
   }
 
-  const { address, name, neighbourhood, websiteUrl, imgUrl } = coffeeStore;
+  const { address, name, imgUrl } = coffeeStore;
 
   const handleUpvoteBtn = () => {
     console.log('Clicked');
@@ -51,13 +51,13 @@ const CoffeeStore = ({ coffeeStore }) => {
           {address && (
             <div className={styles.iconWrapper}>
               <Image src="/static/icons/places.svg" width="24" height="24" alt="places icon" />
-              <p className={styles.text}>{address}</p>
+              <p className={styles.text}>{address.formatted_address || address.address}</p>
             </div>
           )}
-          {neighbourhood && (
+          {address.cross_street && (
             <div className={styles.iconWrapper}>
               <Image src="/static/icons/nearMe.svg" width="24" height="24" alt="near me icon" />
-              <p className={styles.text}>{neighbourhood}</p>
+              <p className={styles.text}>{address.cross_street}</p>
             </div>
           )}
           <div className={styles.iconWrapper}>
@@ -77,6 +77,7 @@ const CoffeeStore = ({ coffeeStore }) => {
 export default CoffeeStore;
 
 export async function getStaticPaths() {
+  const coffeeStores = await fetchCoffeeStores('23.1005156,72.5373776', 'coffee', 6);
   const paths = coffeeStores.map((coffeeStore) => {
     return {
       params: {
@@ -91,6 +92,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+  const coffeeStores = await fetchCoffeeStores('23.1005156,72.5373776', 'coffee', 6);
   const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
     return coffeeStore.id.toString() === params.id; //dynamic id
   });

@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css';
 import Banner from '../components/banner';
 import Card from '../components/card';
 
-import coffeeStores from '../data/coffee-stores.json';
+import { fetchCoffeeStores } from '../lib/coffee-stores';
 
 export default function Home({ storeList }) {
   const handleOnBannerBtnClick = () => {
@@ -49,6 +49,8 @@ export default function Home({ storeList }) {
 }
 
 export async function getStaticProps(context) {
+  const coffeeStores = await fetchCoffeeStores('23.1005156,72.5373776', 'coffee', 8);
+
   return {
     props: { storeList: coffeeStores },
   };
