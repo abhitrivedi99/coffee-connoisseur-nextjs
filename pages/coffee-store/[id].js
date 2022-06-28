@@ -18,7 +18,7 @@ const CoffeeStore = ({ coffeeStore }) => {
   const handleUpvoteBtn = () => {
     console.log('Clicked');
   };
-
+  console.log(coffeeStore);
   return (
     <div className={styles.layout}>
       <Head>
@@ -54,7 +54,7 @@ const CoffeeStore = ({ coffeeStore }) => {
               <p className={styles.text}>{address.formatted_address || address.address}</p>
             </div>
           )}
-          {address.cross_street && (
+          {address?.cross_street && (
             <div className={styles.iconWrapper}>
               <Image src="/static/icons/nearMe.svg" width="24" height="24" alt="near me icon" />
               <p className={styles.text}>{address.cross_street}</p>
@@ -77,7 +77,7 @@ const CoffeeStore = ({ coffeeStore }) => {
 export default CoffeeStore;
 
 export async function getStaticPaths() {
-  const coffeeStores = await fetchCoffeeStores('23.1005156,72.5373776', 'coffee', 6);
+  const coffeeStores = await fetchCoffeeStores('23.1005156,72.5373776', 'coffee', 8);
   const paths = coffeeStores.map((coffeeStore) => {
     return {
       params: {
@@ -92,7 +92,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const coffeeStores = await fetchCoffeeStores('23.1005156,72.5373776', 'coffee', 6);
+  const coffeeStores = await fetchCoffeeStores('23.1005156,72.5373776', 'coffee', 8);
   const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
     return coffeeStore.id.toString() === params.id; //dynamic id
   });
