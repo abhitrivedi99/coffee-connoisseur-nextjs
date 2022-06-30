@@ -8,7 +8,6 @@ export const ACTION_TYPES = {
 };
 
 const storeReducer = (state, action) => {
-  console.log(action);
   switch (action.type) {
     case ACTION_TYPES.SET_LAT_LONG:
       return {
@@ -16,7 +15,6 @@ const storeReducer = (state, action) => {
         latLong: action.payload,
       };
     case ACTION_TYPES.SET_COFFEE_STORES:
-      console.log('here');
       return {
         ...state,
         coffeeStores: action.payload,

@@ -10,38 +10,38 @@ import { StoreContext } from '../../store/store-context';
 import { fetchCoffeeStores } from '../../lib/coffee-stores';
 import { isEmpty } from '../../utils';
 
-const CoffeeStore = ({ coffeeStore }) => {
+const CoffeeStore = (props) => {
+  console.log(props);
   const { query, isFallback } = useRouter();
+
+  const { id } = query;
+
+  const [store, setStore] = useState(props.coffeeStore);
+
   const {
     state: { coffeeStores },
   } = useContext(StoreContext);
 
-  const [store, setStore] = useState(coffeeStore);
-
-  const { id } = query;
-
-  const { address, name, imgUrl } = store;
-
-  const handleUpvoteBtn = () => {
-    console.log('Clicked');
-  };
-
   useEffect(() => {
-    if (isEmpty(coffeeStore)) {
+    if (isEmpty(props.coffeeStore)) {
       if (coffeeStores.length) {
         const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
           return coffeeStore.id.toString() === id; //dynamic id
         });
         setStore(findCoffeeStoreById);
       }
-    } else {
-      setStore(coffeeStore);
     }
-  }, [coffeeStores, coffeeStore, id]);
+  }, [id, props.coffeeStore, coffeeStores]);
 
   if (isFallback) {
     return <div>Loading..</div>;
   }
+  const handleUpvoteBtn = () => {
+    console.log('Clicked');
+  };
+
+  const { address, name, imgUrl } = store;
+
   return (
     <div className={styles.layout}>
       <Head>
