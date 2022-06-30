@@ -1,24 +1,47 @@
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
 import Image from 'next/image';
 import classNames from 'classnames';
 
-import { fetchCoffeeStores } from '../../lib/coffee-stores';
 import styles from '../../styles/coffee-store.module.css';
+import { StoreContext } from '../../store/store-context';
+import { fetchCoffeeStores } from '../../lib/coffee-stores';
+import { isEmpty } from '../../utils';
 
 const CoffeeStore = ({ coffeeStore }) => {
   const { query, isFallback } = useRouter();
-  if (isFallback) {
-    return <div>Loading..</div>;
-  }
+  const {
+    state: { coffeeStores },
+  } = useContext(StoreContext);
 
-  const { address, name, imgUrl } = coffeeStore;
+  const [store, setStore] = useState(coffeeStore);
+
+  const { id } = query;
+
+  const { address, name, imgUrl } = store;
 
   const handleUpvoteBtn = () => {
     console.log('Clicked');
   };
-  console.log(coffeeStore);
+
+  useEffect(() => {
+    if (isEmpty(coffeeStore)) {
+      if (coffeeStores.length) {
+        const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
+          return coffeeStore.id.toString() === id; //dynamic id
+        });
+        setStore(findCoffeeStoreById);
+      }
+    } else {
+      setStore(coffeeStore);
+    }
+  }, [coffeeStores, coffeeStore, id]);
+
+  if (isFallback) {
+    return <div>Loading..</div>;
+  }
   return (
     <div className={styles.layout}>
       <Head>
@@ -77,7 +100,7 @@ const CoffeeStore = ({ coffeeStore }) => {
 export default CoffeeStore;
 
 export async function getStaticPaths() {
-  const coffeeStores = await fetchCoffeeStores('23.1005156,72.5373776', 'coffee', 8);
+  const coffeeStores = await fetchCoffeeStores();
   const paths = coffeeStores.map((coffeeStore) => {
     return {
       params: {
@@ -92,7 +115,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const coffeeStores = await fetchCoffeeStores('23.1005156,72.5373776', 'coffee', 8);
+  const coffeeStores = await fetchCoffeeStores();
   const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
     return coffeeStore.id.toString() === params.id; //dynamic id
   });
