@@ -27,8 +27,9 @@ export default function Home({ storeList }) {
     if (latLong) {
       try {
         const fetchingData = async () => {
-          const fetchCoffeeStoresData = await fetchCoffeeStores('coffee', 30, latLong);
-          dispatch({ type: ACTION_TYPES.SET_COFFEE_STORES, payload: fetchCoffeeStoresData });
+          const res = await fetch(`/api/getCoffeeStoresByLocation?latLong=${latLong}&limit=30`);
+          const coffeeStores = await res.json();
+          dispatch({ type: ACTION_TYPES.SET_COFFEE_STORES, payload: coffeeStores });
         };
 
         fetchingData();

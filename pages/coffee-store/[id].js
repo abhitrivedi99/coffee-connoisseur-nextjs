@@ -11,7 +11,6 @@ import { fetchCoffeeStores } from '../../lib/coffee-stores';
 import { isEmpty } from '../../utils';
 
 const CoffeeStore = (props) => {
-  console.log(props);
   const { query, isFallback } = useRouter();
 
   const { id } = query;
@@ -36,6 +35,7 @@ const CoffeeStore = (props) => {
   if (isFallback) {
     return <div>Loading..</div>;
   }
+
   const handleUpvoteBtn = () => {
     console.log('Clicked');
   };
